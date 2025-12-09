@@ -1,131 +1,490 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RASA - Refleksi Cinta</title>
+  <meta charset="UTF-8" />
+  <title>REFLEKSI ATAS SIKAP DASAR ANGGARAN</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <meta name="description" content="Isi kuesioner ini untuk mengukur tingkat financial mindfulness Anda dan dapatkan skornya." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
   <style>
-    body {
-      POPINS: POPINS, POPINS;
-      text-align: center;
-      background: linear-gradient(to top, #e0f7fa, #ffffff);
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      margin: 0;
+    :root{
+      --bg:#F6FBF8;           /* cream background */
+      --card:#FFFFFF;
+      --accent:#2e8b57;       /* primary green */
+      --accent-dark:#256b45;
+      --accent-light:#a9e6c9;
+      --muted:#6b6f72;
+      --shadow: rgba(39,50,56,0.08);
+      --font:'Poppins', sans-serif;
     }
-    .container {
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      max-width: 600px;
-      width: 90%;
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      padding:24px;
+      font-family:var(--font);
+      background:linear-gradient(180deg,var(--bg), #f0fbf5);
+      display:flex;
+      justify-content:center;
+      align-items:flex-start;
+      min-height:100vh;
     }
-    h1 {
-      color: purple;
-      font-size: 32px;
-      margin-bottom: 16px;
+    .container{
+      width:100%;
+      max-width:900px;
+      background:var(--card);
+      padding:32px;
+      border-radius:16px;
+      box-shadow:0 12px 30px var(--shadow);
+      border:1px solid #e6f1ea;
     }
-    p {
-      margin-bottom: 24px;
-      font-size: 18px;
-      color: #444;
-      min-height: 60px;
-    }
-    button {
-      background-color: #8e44ad;
-      color: white;
-      border: none;
-      padding: 12px 24px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      margin: 5px;
-    }
-    button:hover {
-      background-color: #732d91;
-    }
-    .options button {
-      padding: 8px 16px;
-      font-size: 14px;
+    .page{display:none}
+    .page.active{display:block}
+    h1,h2{margin:0 0 12px 0}
+    /* Intro */
+    #intro-page h1{font-size:2rem;color:var(--accent)}
+    .form-group{margin:12px 0}
+    .form-group label{display:block;font-weight:600;color:#333;margin-bottom:6px}
+    .form-group input{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd}
+    .button-group{text-align:center;margin-top:18px}
+    button{cursor:pointer;border:0;padding:12px 20px;border-radius:40px;font-weight:600}
+    #startBtn{background:var(--accent);color:#fff;box-shadow:0 6px 18px rgba(46,139,87,0.12)}
+    #startBtn:hover{background:var(--accent-dark);transform:translateY(-3px)}
+    /* Quiz */
+    header h1{font-size:1.6rem;color:var(--accent)}
+    .intro{color:var(--muted);margin-bottom:18px}
+    .question{background:#fbfffb;border:1px solid #e9f6ec;padding:16px;border-radius:12px;margin-bottom:14px}
+    .scale{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+    .scale label{display:flex;flex-direction:column;align-items:center;padding:6px 8px;border-radius:8px;cursor:pointer;color:var(--muted)}
+    .scale input{display:none}
+    .emoji-option{font-size:1.6rem}
+    .scale input:checked + .emoji-option{outline:3px solid var(--accent-light);border-radius:8px;padding:2px}
+    .flex-group{display:flex;align-items:center;gap:12px;justify-content:space-between;margin-top:18px}
+    #submitBtn{background:var(--accent);color:#fff}
+    #downloadBtn{background:#f6c85f;color:#222}
+    .small-text{color:var(--muted);font-size:0.9rem}
+    /* Result */
+    #result-page{text-align:center}
+    #score-display{font-size:2.6rem;color:var(--accent);font-weight:700;margin:6px 0}
+    #category-display{font-size:1.4rem;font-weight:700;margin:8px 0}
+    #category-description{color:var(--muted);max-width:720px;margin:0 auto 16px;line-height:1.6}
+    .result-icon{font-size:4rem;margin-bottom:8px}
+    .button{display:inline-block;padding:10px 18px;border-radius:999px;text-decoration:none}
+    /* Loading overlay */
+    .overlay{position:fixed;inset:0;background:rgba(255,255,255,0.6);display:flex;align-items:center;justify-content:center;z-index:999;display:none}
+    .overlay.active{display:flex}
+    .spinner{width:72px;height:72px;border-radius:50%;border:8px solid #e6f6ee;border-top-color:var(--accent);animation:spin 1s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    footer{margin-top:20px;text-align:center;color:var(--muted);font-size:0.85rem}
+    @media (max-width:600px){
+      .flex-group{flex-direction:column;align-items:stretch}
+      button{width:100%}
     }
   </style>
 </head>
 <body>
+  <div class="overlay" id="overlay">
+    <div style="text-align:center">
+      <div class="spinner"></div>
+      <div style="margin-top:10px;color:#355e45;font-weight:600">Memproses hasil...</div>
+    </div>
+  </div>
+
   <div class="container">
-    <h1>RASA</h1>
-    <p id="statement">Refleksi sederhana untuk melatih kesadaran dalam <i>percintaan</i>.</p>
-    
-    <!-- Pilihan jawaban (Likert) -->
-    <div id="options" class="options" style="display:none;">
-      <p>Pilih jawaban (1 = sangat tidak setuju, 5 = sangat setuju):</p>
-      <button onclick="jawab(1)">1</button>
-      <button onclick="jawab(2)">2</button>
-      <button onclick="jawab(3)">3</button>
-      <button onclick="jawab(4)">4</button>
-      <button onclick="jawab(5)">5</button>
+    <!-- INTRO -->
+    <div id="intro-page" class="page active">
+      <h1>Halo! Selamat datang di RASA 🧠💚</h1>
+      <p style="color:var(--muted);margin-top:6px">Isi data diri lalu tekan <strong>Bersedia</strong> untuk mulai mengisi kuesioner Financial Mindfulness.</p>
+
+      <div class="form-group">
+        <label for="name">Nama Lengkap:</label>
+        <input type="text" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="nrp">NRP:</label>
+        <input type="text" id="nrp" required>
+      </div>
+      <div class="form-group">
+        <label for="fakultas">Fakultas:</label>
+        <input type="text" id="fakultas" required>
+      </div>
+      <div class="form-group">
+        <label for="angkatan">Angkatan:</label>
+        <input type="text" id="angkatan" pattern="[0-9]*" inputmode="numeric" required>
+      </div>
+
+      <div class="button-group">
+        <button id="startBtn">Bersedia</button>
+      </div>
     </div>
 
-    <!-- Tombol mulai -->
-    <button id="startBtn">Mulai</button>
+    <!-- QUIZ -->
+    <div id="quiz-page" class="page">
+      <header>
+        <h1>R A S A — Financial Mindfulness</h1>
+        <p class="intro">Petunjuk: Pilih satu jawaban untuk setiap pernyataan. Skala: 1 (Sangat Tidak Setuju) — 6 (Sangat Setuju).</p>
+      </header>
+
+      <main>
+        <form id="quizForm" action="https://formspree.io/f/xkgqneyz" method="POST">
+          <!-- Hidden inputs untuk dikirim ke Formspree -->
+          <input type="hidden" name="nama" id="hiddenNameInput">
+          <input type="hidden" name="nrp" id="hiddenNRPInput">
+          <input type="hidden" name="fakultas" id="hiddenFakultasInput">
+          <input type="hidden" name="angkatan" id="hiddenAngkatanInput">
+          <input type="hidden" name="total_score" id="hiddenTotalScore">
+          <input type="hidden" name="category" id="hiddenCategory">
+          <input type="hidden" name="average_per_item" id="hiddenAverage">
+
+          <!-- 8 Questions (values 1-6) -->
+          <h2 style="color:var(--accent)">Kesadaran (Awareness)</h2>
+
+          <!-- q1 -->
+          <div class="question">
+            <p><strong>1.</strong> Ketika saya ingin membeli sesuatu, saya tahu persis berapa banyak uang yang saya miliki untuk dibelanjakan.</p>
+            <div class="scale" role="radiogroup">
+              <label><input type="radio" name="q1" value="1" required><span class="emoji-option">😞</span></label>
+              <label><input type="radio" name="q1" value="2"><span class="emoji-option">😔</span></label>
+              <label><input type="radio" name="q1" value="3"><span class="emoji-option">😕</span></label>
+              <label><input type="radio" name="q1" value="4"><span class="emoji-option">🙂</span></label>
+              <label><input type="radio" name="q1" value="5"><span class="emoji-option">😄</span></label>
+              <label><input type="radio" name="q1" value="6"><span class="emoji-option">🤩</span></label>
+            </div>
+          </div>
+
+          <!-- q2 -->
+          <div class="question">
+            <p><strong>2.</strong> Setiap bulan, saya meninjau pengeluaran pada kartu kredit dan debit saya.</p>
+            <div class="scale">
+              <label><input type="radio" name="q2" value="1" required><span class="emoji-option">😞</span></label>
+              <label><input type="radio" name="q2" value="2"><span class="emoji-option">😔</span></label>
+              <label><input type="radio" name="q2" value="3"><span class="emoji-option">😕</span></label>
+              <label><input type="radio" name="q2" value="4"><span class="emoji-option">🙂</span></label>
+              <label><input type="radio" name="q2" value="5"><span class="emoji-option">😄</span></label>
+              <label><input type="radio" name="q2" value="6"><span class="emoji-option">🤩</span></label>
+            </div>
+          </div>
+
+          <!-- q3 -->
+          <div class="question">
+            <p><strong>3.</strong> Saya sangat memperhatikan keuangan pribadi saya.</p>
+            <div class="scale">
+              <label><input type="radio" name="q3" value="1" required><span class="emoji-option">😞</span></label>
+              <label><input type="radio" name="q3" value="2"><span class="emoji-option">😔</span></label>
+              <label><input type="radio" name="q3" value="3"><span class="emoji-option">😕</span></label>
+              <label><input type="radio" name="q3" value="4"><span class="emoji-option">🙂</span></label>
+              <label><input type="radio" name="q3" value="5"><span class="emoji-option">😄</span></label>
+              <label><input type="radio" name="q3" value="6"><span class="emoji-option">🤩</span></label>
+            </div>
+          </div>
+
+          <!-- q4 -->
+          <div class="question">
+            <p><strong>4.</strong> Saya hampir mengetahui secara pasti jumlah total uang yang saya miliki di seluruh rekening bank dan investasi.</p>
+            <div class="scale">
+              <label><input type="radio" name="q4" value="1" required><span class="emoji-option">😞</span></label>
+              <label><input type="radio" name="q4" value="2"><span class="emoji-option">😔</span></label>
+              <label><input type="radio" name="q4" value="3"><span class="emoji-option">😕</span></label>
+              <label><input type="radio" name="q4" value="4"><span class="emoji-option">🙂</span></label>
+              <label><input type="radio" name="q4" value="5"><span class="emoji-option">😄</span></label>
+              <label><input type="radio" name="q4" value="6"><span class="emoji-option">🤩</span></label>
+            </div>
+          </div>
+
+          <h2 style="color:var(--accent);margin-top:18px">Penerimaan (Acceptance)</h2>
+
+          <!-- q5 -->
+          <div class="question">
+            <p><strong>5.</strong> Filsafat pengelolaan uang pribadi saya adalah “tetap tenang dan lanjutkan.”</p>
+            <div class="scale">
+              <label><input type="radio" name="q5" value="1" required><span class="emoji-option">😞</span></label>
+              <label><input type="radio" name="q5" value="2"><span class="emoji-option">😔</span></label>
+              <label><input type="radio" name="q5" value="3"><span class="emoji-option">😕</span></label>
+              <label><input type="radio" name="q5" value="4"><span class="emoji-option">🙂</span></label>
+              <label><input type="radio" name="q5" value="5"><span class="emoji-option">😄</span></label>
+              <label><input type="radio" name="q5" value="6"><span class="emoji-option">🤩</span></label>
+            </div>
+          </div>
+
+          <!-- q6 (reverse) -->
+          <div class="question">
+            <p><strong>6.</strong> Saya tidak dapat melihat laporan kartu kredit atau debit saya tanpa emosi mengambil alih. (RC)</p>
+            <div class="scale">
+              <label><input type="radio" name="q6" value="1" required><span class="emoji-option">😞</span></label>
+              <label><input type="radio" name="q6" value="2"><span class="emoji-option">😔</span></label>
+              <label><input type="radio" name="q6" value="3"><span class="emoji-option">😕</span></label>
+              <label><input type="radio" name="q6" value="4"><span class="emoji-option">🙂</span></label>
+              <label><input type="radio" name="q6" value="5"><span class="emoji-option">😄</span></label>
+              <label><input type="radio" name="q6" value="6"><span class="emoji-option">🤩</span></label>
+            </div>
+          </div>
+
+          <!-- q7 (reverse) -->
+          <div class="question">
+            <p><strong>7.</strong> Jika saldo rekening bank saya tidak seperti yang saya inginkan, saya merasa sulit untuk fokus pada hal lain. (RC)</p>
+            <div class="scale">
+              <label><input type="radio" name="q7" value="1" required><span class="emoji-option">😞</span></label>
+              <label><input type="radio" name="q7" value="2"><span class="emoji-option">😔</span></label>
+              <label><input type="radio" name="q7" value="3"><span class="emoji-option">😕</span></label>
+              <label><input type="radio" name="q7" value="4"><span class="emoji-option">🙂</span></label>
+              <label><input type="radio" name="q7" value="5"><span class="emoji-option">😄</span></label>
+              <label><input type="radio" name="q7" value="6"><span class="emoji-option">🤩</span></label>
+            </div>
+          </div>
+
+          <!-- q8 (reverse) -->
+          <div class="question">
+            <p><strong>8.</strong> Ketika ada perubahan dalam kehidupan finansial saya, saya sering bereaksi secara tidak rasional atau tidak pantas. (RC)</p>
+            <div class="scale">
+              <label><input type="radio" name="q8" value="1" required><span class="emoji-option">😞</span></label>
+              <label><input type="radio" name="q8" value="2"><span class="emoji-option">😔</span></label>
+              <label><input type="radio" name="q8" value="3"><span class="emoji-option">😕</span></label>
+              <label><input type="radio" name="q8" value="4"><span class="emoji-option">🙂</span></label>
+              <label><input type="radio" name="q8" value="5"><span class="emoji-option">😄</span></label>
+              <label><input type="radio" name="q8" value="6"><span class="emoji-option">🤩</span></label>
+            </div>
+          </div>
+
+          <div class="flex-group">
+            <button type="button" id="submitBtn">Lihat Hasil 🚀</button>
+            <p class="small-text">Semua pertanyaan wajib diisi. Data akan dikirim ke Formspree.</p>
+          </div>
+        </form>
+      </main>
+    </div>
+
+    <!-- RESULT -->
+    <div id="result-page" class="page">
+      <h1>Hasil Kuesioner Anda 🎉</h1>
+      <div class="result-icon" id="resultIcon">🙂</div>
+      <div id="score-display">Skor Total: -</div>
+      <div id="category-display">Kategori: -</div>
+      <p id="category-description">-</p>
+      <div style="display:flex;gap:12px;justify-content:center">
+        <button id="downloadBtn" class="button">Download / Print Hasil</button>
+        <button id="restartBtn" class="button" style="background:var(--accent);color:#fff">Kembali ke Awal</button>
+      </div>
+    </div>
+
+    <footer>
+      <small>Kelompok 5 KP B — Pengukuran Skala Psikologi • Universitas Surabaya</small>
+    </footer>
   </div>
 
   <script>
-    const statements = [
-      "Saya percaya cinta sejati hanya datang sekali seumur hidup.",
-      "Saya merasa nyaman mengekspresikan perasaan saya pada pasangan.",
-      "Saya percaya bahwa hubungan yang sehat harus berdasarkan kepercayaan.",
-      "Saya menganggap komunikasi terbuka adalah kunci hubungan yang bahagia.",
-      "Saya pernah merasakan jatuh cinta pada pandangan pertama.",
-      "Saya percaya bahwa cinta bisa tumbuh seiring waktu, meski awalnya tidak ada ketertarikan.",
-      "Saya bisa menerima kekurangan pasangan saya dengan lapang dada.",
-      "Saya percaya bahwa cinta saja tidak cukup tanpa komitmen."
-    ];
+    document.addEventListener('DOMContentLoaded', function(){
+      // Elemen
+      const introPage = document.getElementById('intro-page');
+      const quizPage = document.getElementById('quiz-page');
+      const resultPage = document.getElementById('result-page');
+      const startBtn = document.getElementById('startBtn');
+      const submitBtn = document.getElementById('submitBtn');
+      const restartBtn = document.getElementById('restartBtn');
+      const overlay = document.getElementById('overlay');
 
-    let index = 0;
-    let skor = 0;
+      const hiddenName = document.getElementById('hiddenNameInput');
+      const hiddenNRP = document.getElementById('hiddenNRPInput');
+      const hiddenFakultas = document.getElementById('hiddenFakultasInput');
+      const hiddenAngkatan = document.getElementById('hiddenAngkatanInput');
+      const hiddenTotalScore = document.getElementById('hiddenTotalScore');
+      const hiddenCategory = document.getElementById('hiddenCategory');
+      const hiddenAverage = document.getElementById('hiddenAverage');
 
-    // Supaya tombol mulai langsung aktif
-    document.getElementById("startBtn").addEventListener("click", mulai);
+      const resultIcon = document.getElementById('resultIcon');
+      const scoreDisplay = document.getElementById('score-display');
+      const categoryDisplay = document.getElementById('category-display');
+      const categoryDescription = document.getElementById('category-description');
 
-    function mulai() {
-      document.getElementById("startBtn").style.display = "none";
-      document.getElementById("options").style.display = "block";
-      document.getElementById("statement").innerText = statements[index];
-    }
-
-    function jawab(nilai) {
-      skor += nilai;
-      index++;
-      if (index < statements.length) {
-        document.getElementById("statement").innerText = statements[index];
-      } else {
-        tampilkanHasil();
-      }
-    }
-
-    function tampilkanHasil() {
-      let interpretasi = "";
-      if (skor >= 8 && skor <= 18) {
-        interpretasi = "✨ Skor Anda menunjukkan tingkat cinta yang relatif rendah. Anda mungkin cenderung berhati-hati dalam membuka diri.";
-      } else if (skor >= 19 && skor <= 29) {
-        interpretasi = "✨ Skor Anda berada pada tingkat sedang. Artinya, Anda cukup seimbang antara mengekspresikan kasih sayang dan menjaga diri.";
-      } else if (skor >= 30 && skor <= 40) {
-        interpretasi = "✨ Skor Anda menunjukkan tingkat cinta yang tinggi. Anda hangat dan penuh perhatian, tapi tetap perlu menjaga batas sehat.";
+      // Utility: show page
+      function showPage(id){
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        window.scrollTo({top:0,behavior:'smooth'});
       }
 
-      document.querySelector(".container").innerHTML = `
-        <h1>Hasil Refleksi</h1>
-        <p>Skor Akhir Anda: <b>${skor}</b></p>
-        <p>${interpretasi}</p>
-        <hr>
-        <p><i>“Cinta adalah perjalanan, bukan tujuan akhir. Dari setiap refleksi kecil ini, semoga kamu semakin mengenal dirimu sendiri—apa yang kamu yakini, apa yang kamu rasakan, dan apa yang benar-benar penting dalam hubungan.”</i> 💜</p>
-        <button onclick="location.reload()">Ulangi Lagi</button>
-      `;
-    }
+      // Start button: validasi data, pindah halaman dan isi hidden
+      startBtn.addEventListener('click', function(){
+        const name = document.getElementById('name').value.trim();
+        const nrp = document.getElementById('nrp').value.trim();
+        const fakultas = document.getElementById('fakultas').value.trim();
+        const angkatan = document.getElementById('angkatan').value.trim();
+
+        if(!name || !nrp || !fakultas || !angkatan){
+          alert('Mohon lengkapi semua data diri terlebih dahulu.');
+          return;
+        }
+
+        hiddenName.value = name;
+        hiddenNRP.value = nrp;
+        hiddenFakultas.value = fakultas;
+        hiddenAngkatan.value = angkatan;
+
+        showPage('quiz-page');
+      });
+
+      // Ambil selected value
+      function getSelectedValue(name){
+        const el = document.querySelector('input[name="'+name+'"]:checked');
+        return el ? parseInt(el.value,10) : null;
+      }
+
+      // Kalkulasi total dengan reverse scoring q6,q7,q8 (scale 1-6)
+      function calculateTotal(){
+        const questions = ['q1','q2','q3','q4','q5','q6','q7','q8'];
+        const reversed = ['q6','q7','q8'];
+        const maxPerItem = 6;
+        let total = 0;
+
+        for(let i=0;i<questions.length;i++){
+          const v = getSelectedValue(questions[i]);
+          if(v === null) {
+            return { ok:false, missing: i+1 };
+          }
+          if(reversed.includes(questions[i])){
+            // reverse: new = (max+1 - v)
+            total += (maxPerItem + 1 - v);
+          } else {
+            total += v;
+          }
+        }
+        return { ok:true, total: total };
+      }
+
+      // Interpretasi berdasarkan RATA-RATA per item menggunakan norma dari gambar (kolom yg kita pilih)
+      // Norma per-item (dari tabel gambar kolom contoh): 
+      // SR: <3.455
+      // R : 3.455 - 4.010
+      // C : 4.011 - 5.122
+      // T : 5.123 - 5.678
+      // ST: >5.679
+      function interpretByAverage(avg){
+        if(avg < 3.455) return { label: "Mindfulness Keuangan: RENDAH", color:'#e74c3c', icon:'😔', desc: "Hasil ini menunjukkan Anda mungkin memiliki kesadaran dan penerimaan yang rendah terhadap keuangan pribadi. Mulailah dengan membuat anggaran sederhana dan melacak pengeluaran untuk meningkatkan pemahaman Anda." };
+        if(avg >= 3.455 && avg <= 4.010) return { label: "Mindfulness Keuangan: SEDANG", color:'#f39c12', icon:'🤔', desc: "Anda memiliki kesadaran dan penerimaan yang cukup baik, tetapi masih ada ruang untuk perbaikan. Coba luangkan waktu setiap bulan untuk meninjau laporan keuangan Anda dan identifikasi area yang bisa ditingkatkan." };
+        if(avg >= 4.011 && avg <= 5.122) return { label: "Mindfulness Keuangan: TINGGI", color:'#34a853', icon:'🥳', desc: "Selamat! Anda menunjukkan tingkat kesadaran dan penerimaan yang tinggi terhadap keuangan pribadi. Pertahankan kebiasaan positif ini dan teruslah belajar untuk mencapai tujuan finansial Anda." };
+        if(avg >= 5.123 && avg <= 5.678) return { label: "Mindfulness Keuangan: SANGAT TINGGI", color:'#2ecc71', icon:'🏆', desc: "Anda sudah sangat sadar dan mampu mengelola keuangan dengan sangat baik. Tingkatkan literasi keuangan untuk semakin kuat dalam pengambilan keputusan." };
+        return { label: "Mindfulness Keuangan: ISTIMEWA", color:'#1abc9c', icon:'🌟', desc: "Anda memiliki tingkat mindfulness keuangan yang luar biasa. Terus pertahankan kebiasaan hebat ini!" };
+      }
+
+      // Submit (lihat hasil)
+      submitBtn.addEventListener('click', function(){
+        const res = calculateTotal();
+        if(!res.ok){
+          alert('Pertanyaan nomor ' + res.missing + ' belum dijawab.');
+          return;
+        }
+
+        // tampilkan loading singkat
+        overlay.classList.add('active');
+
+        // Simulasikan delay singkat (untuk UX)
+        setTimeout(() => {
+          overlay.classList.remove('active');
+
+          const total = res.total;                // total after reverse scoring
+          const average = +(total / 8).toFixed(3); // rata-rata per item, 3 desimal
+          hiddenTotalScore.value = total;
+          hiddenAverage.value = average;
+
+          // interpret berdasarkan average per-item
+          const info = interpretByAverage(average);
+
+          hiddenCategory.value = info.label;
+
+          // update UI hasil
+          scoreDisplay.textContent = `Skor Total: ${total} (Rata-rata per item: ${average})`;
+          categoryDisplay.textContent = info.label;
+          categoryDisplay.style.color = info.color;
+          categoryDescription.textContent = info.desc;
+          resultIcon.textContent = info.icon;
+
+          showPage('result-page');
+
+          // Kirim data ke Formspree (async)
+          const form = document.getElementById('quizForm');
+          fetch(form.action, {
+            method: 'POST',
+            body: new FormData(form),
+            headers: {
+              'Accept': 'application/json'
+            }
+          }).then(response => {
+            // opsi: bisa tampilkan pesan kecil kalau ingin
+            if(!response.ok){
+              console.warn('Form submission responded with non-ok status.');
+            }
+          }).catch(err => {
+            console.error('Gagal mengirim form:', err);
+          });
+
+        }, 700); // 700ms loading untuk UX
+      });
+
+      // Download / Print hasil
+      document.getElementById('downloadBtn').addEventListener('click', function(){
+        // Buat window baru dengan konten hasil untuk di-print atau simpan PDF
+        const name = hiddenName.value || 'Anonim';
+        const nrp = hiddenNRP.value || '-';
+        const fakultas = hiddenFakultas.value || '-';
+        const angkatan = hiddenAngkatan.value || '-';
+        const totalText = document.getElementById('score-display').textContent;
+        const categoryText = document.getElementById('category-display').textContent;
+        const desc = document.getElementById('category-description').textContent;
+        const icon = resultIcon.textContent || '';
+
+        const html = `
+          <html>
+            <head>
+              <title>Hasil Kuesioner - ${name}</title>
+              <meta name="viewport" content="width=device-width,initial-scale=1.0">
+              <style>
+                body{font-family:Arial,Helvetica,sans-serif;padding:24px;color:#222}
+                .box{max-width:720px;margin:0 auto;padding:18px;border-radius:12px;border:1px solid #e6f1ea}
+                h2{color:#2e8b57}
+                .meta{color:#444;margin-bottom:12px}
+                .score{font-size:20px;color:#2e8b57;font-weight:700}
+                .desc{margin-top:12px;color:#444;line-height:1.5}
+              </style>
+            </head>
+            <body>
+              <div class="box">
+                <h2>Hasil Kuesioner Financial Mindfulness ${icon}</h2>
+                <div class="meta">Nama: ${escapeHtml(name)}<br>NRP: ${escapeHtml(nrp)}<br>Fakultas: ${escapeHtml(fakultas)} • Angkatan: ${escapeHtml(angkatan)}</div>
+                <div class="score">${escapeHtml(totalText)}</div>
+                <div style="margin-top:8px;font-weight:600">${escapeHtml(categoryText)}</div>
+                <div class="desc">${escapeHtml(desc)}</div>
+              </div>
+              <script>
+                setTimeout(()=>{window.print()},300);
+                function closeAfterPrint(){ setTimeout(()=>window.close(),500); }
+                window.onafterprint = closeAfterPrint;
+              </script>
+            </body>
+          </html>
+        `;
+        const w = window.open('', '_blank', 'noopener,noreferrer');
+        if(!w) {
+          alert('Pop-up diblokir. Izinkan pop-up atau gunakan fitur print di browser.');
+          return;
+        }
+        w.document.open();
+        w.document.write(html);
+        w.document.close();
+      });
+
+      // Sanitizer kecil untuk teks yang dimasukkan ke HTML
+      function escapeHtml(str){
+        return String(str).replace(/[&<>"']/g, function(m){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'": '&#39;'})[m]; });
+      }
+
+      // Restart
+      restartBtn.addEventListener('click', function(){
+        document.getElementById('quizForm').reset();
+        showPage('intro-page');
+      });
+    });
   </script>
 </body>
 </html>
 
+     
