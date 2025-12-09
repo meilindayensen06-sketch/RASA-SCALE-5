@@ -24,7 +24,28 @@
   .form-group{margin-bottom:12px}
   label{display:block;font-weight:600;color:#333;margin-bottom:6px}
   input[type=text]{width:100%;padding:10px;border-radius:8px;border:1px solid #ddd}
-  .button{padding:12px 20px;border-radius:999px;border:0;cursor:pointer;font-weight:700}
+  .button{ }
+    #intro-page button {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 50px;
+      background-color: var(--secondary-color);
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      margin-top: 2rem;
+    }
+    #intro-page button:hover {
+      background-color: #2b914a;
+      transform: translateY(-3px);
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+    }
+    .button-group {
+      text-align: center;
+}
   .primary{background:var(--accent);color:white}
   .primary:hover{background:var(--accent-dark)}
   .question{margin-bottom:16px;padding:12px;border-radius:10px;background:#fbfffb;border:1px solid #e9f6ec}
