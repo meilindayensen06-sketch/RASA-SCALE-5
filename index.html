@@ -46,6 +46,42 @@
     .button-group {
       text-align: center;
 }
+    }
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+  }
+    .scale input[type="radio"]:checked + .emoji-option::before {
+      content: '✅';
+      display: block;
+      font-size: 1rem;
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .emoji-option {
+      font-size: 1.5rem;
+    }
+    .emoji-option + span {
+      margin-top: 5px;
+      font-size: 0.9rem;
+      font-weight: normal;
+    }
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--primary-color);
+      margin-top: 3rem;
+      margin-bottom: 1.5rem;
+    }
+
   .primary{background:var(--accent);color:white}
   .primary:hover{background:var(--accent-dark)}
   .question{margin-bottom:16px;padding:12px;border-radius:10px;background:#fbfffb;border:1px solid #e9f6ec}
