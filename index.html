@@ -45,7 +45,7 @@
   <div class="container" role="main">
     <!-- INTRO -->
     <div id="intro-page" class="page active" aria-live="polite">
-      <h1>RASA SCALEs</h1>
+      <h1>RASA SCALE</h1>
       <p class="small">Isi data diri lalu tekan <strong>Bersedia</strong> untuk memulai.</p>
       <div class="form-group">
         <label for="name">Nama Lengkap</label>
@@ -71,7 +71,9 @@
     <!-- QUIZ -->
     <div id="quiz-page" class="page" aria-live="polite">
       <h2>Petunjuk</h2>
-      <p class="small">Pilih satu jawaban untuk setiap pernyataan (1 = Sangat Tidak Setuju ... 6 = Sangat Setuju).</p>
+      <p class="small">Pilih satu jawaban yang paling sesuai untuk setiap pernyataan. 👇<br>
+          <span class="emoji-scale">Skala: Sangat Tidak Setuju=😞, Tidak Setuju=😔, Netral=😕, Agak Setuju=🙂, Setuju=😄, Sangat Setuju=🤩
+.</p>
 
       <form id="quizForm" action="https://formspree.io/f/xkgqneyz" method="POST">
         <!-- Hidden untuk Google/backup -->
@@ -86,8 +88,7 @@
         <!-- QUESTIONS 1..8 -->
         <div class="question">
           <strong>1.</strong> Ketika saya ingin membeli sesuatu, saya tahu persis berapa banyak uang yang saya miliki untuk dibelanjakan.
-          <div class="scale">
-           role="radiogroup" aria-labelledby="q1_label">
+          <div class="scale">="q1_label">
               <span id="q1_label" class="sr-only"></span>
               <label>
                 <input type="radio" name="q1" value="1" required>
