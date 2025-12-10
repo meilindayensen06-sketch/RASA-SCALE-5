@@ -132,15 +132,28 @@
   transform: translateY(-8px) scale(1.02);
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
 }
-    .page {
-      display: none; /* Sembunyikan semua halaman secara default */
-      text-align: left;
-    }
-    .page.active {
-      display: block; /* Tampilkan halaman yang aktif */
-    .button-group {
-      text-align: center;
+   .page {
+  visibility: hidden;
+  opacity: 0;
+  text-align: left;
+  position: absolute;
+  width: 100%;
+  transition: opacity 0.4s ease;
 }
+
+.page.active {
+  visibility: visible;
+  opacity: 1;
+  position: relative;
+}
+
+}
+  visibility: hidden;
+opacity: 0;
+...
+visibility: visible;
+opacity: 1;
+
     }
     button {
       padding: 12px 24px;
