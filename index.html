@@ -32,6 +32,33 @@
   top: -10px;
   right: -10px;
 }
+  @keyframes popIn {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.emoji-option {
+  font-size: 1.5rem;
+  position: relative;
+}
+.scale input[type="radio"]:checked + .emoji-option::before {
+  content: '✅';
+  font-size: 1.2rem;
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  animation: popIn 0.25s ease-out;
+}
+
     }
   .emoji-option {
   position: relative;
