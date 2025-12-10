@@ -177,6 +177,23 @@ opacity: 1;
       top: 0;
       left: 0;
     }
+  .emoji-option {
+  font-size: 1.5rem;
+  position: relative; /* WAJIB */
+}
+.emoji-option {
+  font-size: 1.5rem;
+  position: relative;
+}
+.scale input[type="radio"]:checked + .emoji-option::before {
+  content: '✅';
+  display: block;
+  font-size: 1rem;
+  position: absolute;
+  top: -5px;
+  right: -5px;
+}
+
     .emoji-option {
       font-size: 1.5rem;
     }
